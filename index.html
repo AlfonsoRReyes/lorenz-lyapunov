@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>CheerpJ test</title>
+    <script src="https://cjrtnc.leaningtech.com/4.1/loader.js"></script>
+  </head>
+  <body>
+    <script>
+      (async function () {
+        await cheerpjInit();
+        cheerpjCreateDisplay(1280, 1024);
+        // run remotely
+        await cheerpjRunJar("/app/cheerpj-lorenz-lyapunov/lorenz-lyapunov.jar");
+      })();
+    </script>
+  </body>
+</html>
+
