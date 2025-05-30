@@ -4,11 +4,12 @@ I am trying to reproduce the experiment that was published here: https://www.lin
 
 One of the best articles I've found that scientifically proves that no "AI" or machine learning algorithm can perform reliable predictions in nonlinear chaotic systems.
 
-## LE = 0
+## x = 1.0; LE = 0
 The first plot is of two Lorenz sets running at a perturbation equal zero on state variables and parameters; the Lyapunov exponent will be around zero or zero. What I am trying to demonstrate is how an infinitesimal change in any of the inputs of Lorenz causes a big disturbance in its output. 
 
-
 ![alt text](assets/zero.png)
+
+## x = 1.0+1e-9
 
 ## x = 1.0+1e-12
 This next plot shows that very small perturbation of the order of 1E-12 in the state variable "x" considerably affecting the output of the system. It is shown in the plot below where I plot the Lyapunov exponent (LE) vs time. It should converge to ~0.9056, as is in the literature at "t" between 50 to 100.
@@ -20,10 +21,16 @@ We still observe chaotic behavior. LE~0.98.
 
 ## x =1.0+1e-14
 Still chaotic but the LE curve starts degrading early.
-![alt text](image.png)
+![alt text](assets/1e-14.png)
 
 ## x=1.0+1e-15
+![alt text](assets/1e-15.png)
 
+
+## x=1.0+1e-16
+Lorenz Loses its chaotic behavior. A change of 1-e16 is almost equivalent to setting the delta to zero, which makes no sense. The computer is not anymore catching deltas lower than 1e-15.
+
+![alt text](assets/1e-16.png)
 
 **A quick explanation of LE (λ)**
 
