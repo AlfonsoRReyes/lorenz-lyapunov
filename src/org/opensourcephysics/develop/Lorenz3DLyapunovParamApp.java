@@ -47,7 +47,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         
         // Setup Lyapunov strip chart
         lyapunovDataset.setConnected(true);
-        lyapunovDataset.setMarkerSize(2);
+        lyapunovDataset.setMarkerSize(1);
         lyapunovFrame.addDrawable(lyapunovDataset);
         lyapunovFrame.setAutoscaleX(false);
         lyapunovFrame.setAutoscaleY(true);

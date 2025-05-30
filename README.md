@@ -10,6 +10,9 @@ The first plot is of two Lorenz sets running at a perturbation equal zero on sta
 ![alt text](assets/zero.png)
 
 ## x = 1.0+1e-9
+This is still a small perturbation but still far from the machine epsilon. 
+![alt text](assets/1e-09.png)
+
 
 ## x = 1.0+1e-12
 This next plot shows that very small perturbation of the order of 1E-12 in the state variable "x" considerably affecting the output of the system. It is shown in the plot below where I plot the Lyapunov exponent (LE) vs time. It should converge to ~0.9056, as is in the literature at "t" between 50 to 100.
