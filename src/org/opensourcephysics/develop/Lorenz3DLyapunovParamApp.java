@@ -47,7 +47,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         
         // Setup Lyapunov strip chart
         lyapunovDataset.setConnected(true);
-        lyapunovDataset.setMarkerSize(1);
+        lyapunovDataset.setMarkerSize(1);     // size of the LE curve
         lyapunovFrame.addDrawable(lyapunovDataset);
         lyapunovFrame.setAutoscaleX(false);
         lyapunovFrame.setAutoscaleY(true);
@@ -160,7 +160,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         
         // Integration parameters
         control.setValue("dt", 0.01);
-        control.setValue("time window", 100.0);
+        control.setValue("time window", 200.0);
         enableStepsPerDisplay(true);
     }
 
