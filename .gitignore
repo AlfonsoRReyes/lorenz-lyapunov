@@ -1,5 +1,5 @@
-src/org/opensourcephysics/develop/Lorenz3DLyapunovParamApp.java
 bin/org/opensourcephysics/develop/Lorenz3DLyapunovParamApp.class
 bin/org/opensourcephysics/develop/LorenzLyapunovParam.class
 .vscode/settings.json
 lib/osp.jar
+.gitignore
