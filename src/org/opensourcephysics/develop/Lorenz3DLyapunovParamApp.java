@@ -1,8 +1,8 @@
 /*
- * Two Lorenz systems with Lyapunov Exponent Calculation
- * Using Open Source Physics (OSP) Libraries 
+ * Two Lorenz systems to be used to calculate the Lyapunov Exponent
+ * Using Open Source Physics (OSP) Library
  * Allows for state variables and parameter perturbation 
- * sensitivity analysis
+ * and sensitivity analysis.
  */
 package org.opensourcephysics.develop;
 import org.opensourcephysics.controls.*;
@@ -13,12 +13,12 @@ import org.opensourcephysics.display.*;
 import java.awt.*;
 
 /**
- * Lorenz3DLyapunovParamApp demonstrates the calculation of Lyapunov exponents
+ * Lorenz3DLyapunovParamApp demonstrates the calculation of Lyapunov exponent
  * for the Lorenz system using state variables or parameter perturbation
  */
 public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
     
-    // 3D Display for Lorenz attractor
+    // 3D Display for Lorenz attractor (x, y, z)
     Display3DFrame lorenzFrame = new Display3DFrame("Lorenz Attractor");
     LorenzLyapunovParam lorenz = new LorenzLyapunovParam();
     
@@ -52,7 +52,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         lyapunovFrame.setAutoscaleX(false);
         lyapunovFrame.setAutoscaleY(true);
         
-        // Set initial time window
+        // Set initial time window. It can also be changed from the controller
         lyapunovFrame.setPreferredMinMaxX(0, timeWindow);
         
         // Add reference line at y=0
@@ -94,7 +94,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
      * Initializes the simulation
      */
     public void initialize() {
-        // Read initial conditions for both systems
+        // Read initial conditions for both Lorenz systems
         double x1 = control.getDouble("x1");
         double y1 = control.getDouble("y1");
         double z1 = control.getDouble("z1");
@@ -130,7 +130,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         lyapunovFrame.repaint();
         stateFrame.repaint();
         
-        // Make frames visible
+        // Make plot frames visible
         lorenzFrame.setVisible(true);
         lyapunovFrame.setVisible(true);
         stateFrame.setVisible(true);
@@ -144,18 +144,17 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         control.setValue("x1", 1.0);
         control.setValue("y1", 0.0);
         control.setValue("z1", 0.0);
-        control.setValue("x2", 1.000000001);
+        control.setValue("x2", 1.000000001);  // 1 + 1e-9
         control.setValue("y2", 0.0);
         control.setValue("z2", 0.0);
         
         // Parameters for system 1 (reference)
-        // control.setValue("sigma1", 10.0);
         control.setValue("sigma1", 10.0);
         control.setValue("rho1", 28.0);
         control.setValue("beta1", 8.0/3.0);
         
         // Parameters for system 2 (perturbed sigma)
-        control.setValue("sigma2", 10.0);  // Small perturbation in sigma
+        control.setValue("sigma2", 10.0);  // can also do small perturbation in sigma
         control.setValue("rho2", 28.0);
         control.setValue("beta2", 8.0/3.0);
         
@@ -170,7 +169,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
      */
     protected void doStep() {
         // Step the Lorenz system multiple times for smoother visualization
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             lorenz.doStep();
         }
         
@@ -253,7 +252,7 @@ class LorenzLyapunovParam extends Group implements ODE {
     double beta2 = 8.0/3.0;
     
     // Lyapunov calculation
-    double initialSeparation = 0.0;
+    double initialSeparation = 0.0;   // this was used in the previous version
     double lyapunovSum = 0.0;
     int stepCount = 0;
     
@@ -352,18 +351,16 @@ class LorenzLyapunovParam extends Group implements ODE {
         if (separation > 0 && stepCount > 0) {
             lyapunovSum += Math.log(separation / initialSeparation);
             
-        // Renormalize to prevent overflow
-        // if (separation > 1e-10) {  // Only renormalize if separation is reasonable
+            // Renormalize to prevent overflow
             double scale = initialSeparation / separation;
             state[3] = state[0] + dx * scale;
             state[4] = state[1] + dy * scale;
             state[5] = state[2] + dz * scale;
-        // }
         }
         
         stepCount++;
         
-        // Update visualization
+        // Update visualization in state space
         trail1.addPoint(state[0], state[1], state[2]);
         trail2.addPoint(state[3], state[4], state[5]);
         ball1.setXYZ(state[0], state[1], state[2]);
