@@ -255,6 +255,11 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         lyapunovFrame.repaint();
         lyapunovLogFrame.repaint();
         stateFrame.repaint();
+
+        // In doStep(), add this debug every 100 time units
+        if (time % 100 < 0.1) {
+            System.out.println("t=" + time + ", dataPoints=" + lyapunovDataset.getIndex());
+        }
     }
     
     /**
