@@ -80,17 +80,21 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         // Setup state variables strip chart - clean lines only
         xDataset.setConnected(true);
         xDataset.setMarkerSize(-1);  // Disable markers completely
-        xDataset.setLineColor(Color.DARK_GRAY);
+        
+        xDataset.setLineColor(new Color(80, 200, 120, 255));    // Semi-transparent emerald green (alpha=120)
+        
         stateFrame.addDrawable(xDataset);
         
-        yDataset.setConnected(true);
-        yDataset.setMarkerSize(-1);  // Disable markers completely
-        yDataset.setLineColor(Color.ORANGE);
+        yDataset.setConnected(false);
+        yDataset.setMarkerSize(1);  // Disable markers completely
+
+        yDataset.setMarkerColor(new Color(255, 165, 0, 85));  // Semi-transparent orange (alpha=120)
         stateFrame.addDrawable(yDataset);
         
         zDataset.setConnected(true);
         zDataset.setMarkerSize(-1);  // Disable markers completely
-        zDataset.setLineColor(Color.GREEN);
+        
+        zDataset.setLineColor(new Color(0, 255, 255, 125));  // Semi-transparent cyan (alpha=120)
         stateFrame.addDrawable(zDataset);
         
         stateFrame.setAutoscaleX(false);
