@@ -22,9 +22,13 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
     Display3DFrame lorenzFrame = new Display3DFrame("Lorenz Attractor");
     LorenzLyapunovParam lorenz = new LorenzLyapunovParam();
     
-    // Strip chart for Lyapunov exponent evolution
+    // Strip chart for Lyapunov exponent evolution (linear scale)
     PlotFrame lyapunovFrame = new PlotFrame("Time", "Lyapunov Exponent", "Lyapunov Exponent Evolution");
     Dataset lyapunovDataset = new Dataset(Color.RED);
+    
+    // Strip chart for Lyapunov exponent evolution (log scale)
+    PlotFrame lyapunovLogFrame = new PlotFrame("Time", "Log(Lyapunov Exponent)", "Lyapunov Exponent Evolution (Log Scale)");
+    Dataset lyapunovLogDataset = new Dataset(Color.MAGENTA);
     
     // Strip chart for state variables evolution
     PlotFrame stateFrame = new PlotFrame("Time", "State Variables x,y,z", "Lorenz State Variables vs Time");
@@ -34,7 +38,6 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
     
     // Simulation parameters
     private double timeWindow = 100.0; // Time window for strip chart
-    private int maxDataPoints = 5000;  // Increased limit to avoid frequent clearing
     
     /**
      * Constructs the Lorenz3DLyapunovParamApp application
@@ -45,37 +48,53 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         lorenzFrame.setDecorationType(org.opensourcephysics.display3d.core.VisualizationHints.DECORATION_AXES);
         lorenzFrame.addElement(lorenz);
         
-        // Setup Lyapunov strip chart
+        // Setup linear Lyapunov strip chart
         lyapunovDataset.setConnected(true);
-        lyapunovDataset.setMarkerSize(1);     // size of the LE curve
+        lyapunovDataset.setLineColor(Color.RED);
+        lyapunovDataset.setMarkerSize(-1);     // size of the LE curve
         lyapunovFrame.addDrawable(lyapunovDataset);
-        lyapunovFrame.setAutoscaleX(false);
-        lyapunovFrame.setAutoscaleY(true);
+        lyapunovFrame.setAutoscaleX(true);   // Enable autoscale for X
+        lyapunovFrame.setAutoscaleY(true);   // Enable autoscale for Y
         
-        // Set initial time window. It can also be changed from the controller
-        lyapunovFrame.setPreferredMinMaxX(0, timeWindow);
+        // Set Y-axis to start from 0, but keep Y-max autoscaling
+        lyapunovFrame.setPreferredMinMaxY(0, Double.NaN);  // Y-min=0, Y-max=auto
         
-        // Add reference line at y=0
-        Dataset zeroLine = new Dataset(Color.BLACK);
-        zeroLine.append(0, 0);
-        zeroLine.append(timeWindow * 2, 0); // Make it longer than window
-        zeroLine.setConnected(true);
-        lyapunovFrame.addDrawable(zeroLine);
+        // Don't set initial time window when autoscaling
+        
+        // Remove reference line - it interferes with autoscaling
+        // Dataset zeroLine = new Dataset(Color.BLACK);
+        // zeroLine.append(0, 0);
+        // zeroLine.append(timeWindow * 2, 0);
+        // zeroLine.setConnected(true);
+        // lyapunovFrame.addDrawable(zeroLine);
+        
+        // Setup log scale Lyapunov strip chart (use built-in log scale)
+        lyapunovLogDataset.setConnected(true);
+        lyapunovLogDataset.setLineColor(Color.MAGENTA);
+        lyapunovLogDataset.setMarkerSize(-1);
+        lyapunovLogFrame.addDrawable(lyapunovLogDataset);
+        lyapunovLogFrame.setAutoscaleX(true);  // Enable autoscale for X
+        lyapunovLogFrame.setAutoscaleY(true);  // Enable autoscale for Y
+        lyapunovLogFrame.setLogScale(false, true); // Linear time, log Lyapunov exponent
         
         // Setup state variables strip chart - clean lines only
         xDataset.setConnected(true);
         xDataset.setMarkerSize(-1);  // Disable markers completely
-        xDataset.setLineColor(Color.DARK_GRAY);
+        
+        xDataset.setLineColor(new Color(80, 200, 120, 255));    // Semi-transparent emerald green (alpha=120)
+        
         stateFrame.addDrawable(xDataset);
         
-        yDataset.setConnected(true);
-        yDataset.setMarkerSize(-1);  // Disable markers completely
-        yDataset.setLineColor(Color.ORANGE);
+        yDataset.setConnected(false);
+        yDataset.setMarkerSize(1);  // Disable markers completely
+
+        yDataset.setMarkerColor(new Color(255, 165, 0, 85));  // Semi-transparent orange (alpha=120)
         stateFrame.addDrawable(yDataset);
         
         zDataset.setConnected(true);
         zDataset.setMarkerSize(-1);  // Disable markers completely
-        zDataset.setLineColor(Color.GREEN);
+        
+        zDataset.setLineColor(new Color(0, 255, 255, 125));  // Semi-transparent cyan (alpha=120)
         stateFrame.addDrawable(zDataset);
         
         stateFrame.setAutoscaleX(false);
@@ -86,7 +105,9 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         lorenzFrame.setLocation(50, 50);
         lyapunovFrame.setLocation(500, 50);
         lyapunovFrame.setSize(400, 300);
-        stateFrame.setLocation(950, 50);
+        lyapunovLogFrame.setLocation(950, 50);  // Position log plot to the right
+        lyapunovLogFrame.setSize(400, 300);
+        stateFrame.setLocation(500, 400);       // Move state variables below
         stateFrame.setSize(400, 300);
     }
 
@@ -122,17 +143,20 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         
         // Clear and setup strip charts with current time window
         lyapunovDataset.clear();
+        lyapunovLogDataset.clear();
         xDataset.clear();
         yDataset.clear();
         zDataset.clear();
-        lyapunovFrame.setPreferredMinMaxX(0, timeWindow);
+        // Don't set PreferredMinMaxX for autoscaling plots
         stateFrame.setPreferredMinMaxX(0, timeWindow);
         lyapunovFrame.repaint();
+        lyapunovLogFrame.repaint();
         stateFrame.repaint();
         
         // Make plot frames visible
         lorenzFrame.setVisible(true);
         lyapunovFrame.setVisible(true);
+        lyapunovLogFrame.setVisible(true);
         stateFrame.setVisible(true);
     }
 
@@ -173,11 +197,13 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
             lorenz.doStep();
         }
         
-        // Update displays
-        lyapunovFrame.setMessage("t=" + decimalFormat.format(lorenz.getTime()) +
-                                ", λ=" + decimalFormat.format(lorenz.getCurrentLyapunov()));
-        lorenzFrame.setMessage("t=" + decimalFormat.format(lorenz.getTime()) + 
-                              ", λ=" + decimalFormat.format(lorenz.getCurrentLyapunov()));
+        // Update displays (format without scientific notation)
+        String timeStr = String.format("%.1f", lorenz.getTime());
+        String lyapunovStr = String.format("%.4f", lorenz.getCurrentLyapunov());
+        
+        lyapunovFrame.setMessage("t=" + timeStr + ", λ=" + lyapunovStr);
+        lyapunovLogFrame.setMessage("t=" + timeStr + ", λ=" + lyapunovStr);
+        lorenzFrame.setMessage("t=" + timeStr + ", λ=" + lyapunovStr);
         
         // Add point to Lyapunov strip chart with scrolling window
         double time = lorenz.getTime();
@@ -191,37 +217,43 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         
         // Plot the actual Lyapunov exponent and state variables
         if (time > 0.1) {
-            // Add to Lyapunov plot
+            // Add to both Lyapunov plots simultaneously (same data)
             lyapunovDataset.append(time, lyapunov);
+            
+            // Add to log scale plot (same raw data - OSP will handle log conversion)
+            if (lyapunov > 0) {  // Only positive values can be plotted on log scale
+                lyapunovLogDataset.append(time, lyapunov);  // Raw value, not log-converted
+            }
 
             // Add to state variables plot
             xDataset.append(time, x);
             yDataset.append(time, y);
             zDataset.append(time, z);
             
-            // Implement scrolling window for both plots
+            // Implement scrolling window for state variables only (both LE plots autoscale)
             if (time > timeWindow) {
                 // Calculate new window bounds
                 double windowStart = time - timeWindow;
                 double windowEnd = time;
                 
-                // Update both plot windows
-                lyapunovFrame.setPreferredMinMaxX(windowStart, windowEnd);
+                // Update only state variables plot window (LE plots autoscale)
                 stateFrame.setPreferredMinMaxX(windowStart, windowEnd);
             }
             
-            // Only clear datasets when they become extremely large
-            if (lyapunovDataset.getIndex() > maxDataPoints) {
-                lyapunovDataset.clear();
-            }
-            if (xDataset.getIndex() > maxDataPoints) {
-                xDataset.clear();
-                yDataset.clear();
-                zDataset.clear();
-            }
+            // Remove auto-clearing feature - let data accumulate indefinitely
+            // if (lyapunovDataset.getIndex() > maxDataPoints) {
+            //     lyapunovDataset.clear();
+            //     lyapunovLogDataset.clear();
+            // }
+            // if (xDataset.getIndex() > maxDataPoints) {
+            //     xDataset.clear();
+            //     yDataset.clear();
+            //     zDataset.clear();
+            // }
         }
         
         lyapunovFrame.repaint();
+        lyapunovLogFrame.repaint();
         stateFrame.repaint();
     }
     
@@ -271,13 +303,13 @@ class LorenzLyapunovParam extends Group implements ODE {
         ball1.setSizeXYZ(1, 1, 1);
         ball1.getStyle().setFillColor(Color.RED);
         trail1.getStyle().setLineColor(Color.RED);
-        trail1.setMaximumPoints(5000);
+        trail1.setMaximumPoints(5000);  // Note: This is for 3D trails, separate from plot data
         
         // Setup perturbed trajectory (blue, smaller and more transparent)
         ball2.setSizeXYZ(0.5, 0.5, 0.5);
         ball2.getStyle().setFillColor(new Color(0, 0, 255, 100));
         trail2.getStyle().setLineColor(new Color(0, 0, 255, 100));
-        trail2.setMaximumPoints(5000);
+        trail2.setMaximumPoints(5000);  // Note: This is for 3D trails, separate from plot data
         
         // Add elements to group
         addElement(trail1);
