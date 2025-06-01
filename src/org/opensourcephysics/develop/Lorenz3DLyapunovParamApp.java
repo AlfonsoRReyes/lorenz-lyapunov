@@ -204,8 +204,8 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
      */
     protected void doStep() {
         // Step the Lorenz system multiple times for smoother visualization
-        for (int i = 0; i < 5; i++) {
-        // for (int i = 0; i < stepsPerDisplay; i++) {
+        // for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < stepsPerDisplay; i++) {
             lorenz.doStep();
         }
         
