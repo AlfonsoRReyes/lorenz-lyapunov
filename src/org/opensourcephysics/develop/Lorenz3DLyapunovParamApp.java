@@ -44,7 +44,6 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
     Dataset zDataset = new Dataset();
 
     // Simulation parameters
-    private double timeWindow = 100.0; // Time window for strip chart
     private double sampleInterval = 25.0; // Sampling interval for convergence plot
     
     /**
@@ -106,9 +105,8 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         zDataset.setLineColor(new Color(0, 255, 0, 120));    // Semi-transparent green (alpha=120)
         stateFrame.addDrawable(zDataset);
         
-        stateFrame.setAutoscaleX(false);
+        stateFrame.setAutoscaleX(true);
         stateFrame.setAutoscaleY(true);
-        stateFrame.setPreferredMinMaxX(0, timeWindow);
         
         // Position frames
         lorenzFrame.setLocation(50, 50);
@@ -145,7 +143,6 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         double beta2 = control.getDouble("beta2");
         
         double dt = control.getDouble("dt");
-        timeWindow = control.getDouble("time window");
         sampleInterval = control.getDouble("sample interval");
         
         // Initialize Lorenz system with separate parameters
@@ -161,7 +158,6 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         yDataset.clear();
         zDataset.clear();
         // Don't set PreferredMinMaxX for autoscaling plots
-        stateFrame.setPreferredMinMaxX(0, timeWindow);
         lyapunovFrame.repaint();
         lyapunovLogFrame.repaint();
         lyapunovSampleFrame.repaint();
@@ -199,7 +195,6 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         
         // Integration parameters
         control.setValue("dt", 0.01);
-        control.setValue("time window", 200.0);
         control.setValue("sample interval", 25.0);
         enableStepsPerDisplay(true);
         setStepsPerDisplay(5);
@@ -263,16 +258,6 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
             xDataset.append(time, x);
             yDataset.append(time, y);
             zDataset.append(time, z);
-            
-            // Implement scrolling window for state variables only (both LE plots autoscale)
-            if (time > timeWindow) {
-                // Calculate new window bounds
-                double windowStart = time - timeWindow;
-                double windowEnd = time;
-                
-                // Update only state variables plot window (LE plots autoscale)
-                stateFrame.setPreferredMinMaxX(windowStart, windowEnd);
-            }
         }
         
         lyapunovFrame.repaint();
