@@ -118,14 +118,14 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         referenceLine.setLineColor(Color.RED);            
 
         // Position frames
-        lorenzFrame.setLocation(50, 50);
-        lyapunovFrame.setLocation(500, 50);
+        lorenzFrame.setLocation(50, 100);
+        lyapunovFrame.setLocation(400, 100);
         lyapunovFrame.setSize(400, 300);
-        lyapunovLogFrame.setLocation(950, 50);  // Position log plot to the right
+        lyapunovLogFrame.setLocation(50, 475);  // Position log plot to the right
         lyapunovLogFrame.setSize(400, 300);
-        lyapunovSampleFrame.setLocation(1400, 50); // Position sampling plot to the far right
+        lyapunovSampleFrame.setLocation(750, 100); // Position sampling plot to the far right
         lyapunovSampleFrame.setSize(400, 300);
-        stateFrame.setLocation(500, 400);       // Move state variables below
+        stateFrame.setLocation(400, 475);       // Move state variables below
         stateFrame.setSize(400, 300);
     }
 
