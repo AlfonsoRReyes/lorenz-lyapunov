@@ -43,6 +43,10 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
     Dataset yDataset = new Dataset();
     Dataset zDataset = new Dataset();
 
+    // horizontal reference line
+    Dataset referenceLine = new Dataset(); 
+    
+
     // Simulation parameters
     private double sampleInterval = 25.0; // Sampling interval for convergence plot
     
@@ -89,15 +93,6 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         // we will need 1.1 when epsilon is very small
         lyapunovSampleFrame.setPreferredMinMaxY(0, 1.1);  // Y-min=0, Y-max=1
         
-        // // Add horizontal reference line at 0.9056
-        // Dataset referenceLine = new Dataset();
-        // referenceLine.setMarkerColor(Color.RED);
-        // referenceLine.setMarkerShape(Dataset.SQUARE);
-        // referenceLine.append(0, 0.9056);
-        // referenceLine.append(1000, 0.9056); // Make it extend far enough
-        // referenceLine.setConnected(false);
-        // lyapunovSampleFrame.addDrawable(referenceLine);
-        
         // Setup state variables strip chart - clean lines with better visibility
         xDataset.setConnected(true);
         xDataset.setMarkerSize(-1);  // Disable markers completely
@@ -113,10 +108,15 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         zDataset.setMarkerSize(-1);  // Disable markers completely
         zDataset.setLineColor(new Color(0, 255, 0, 120));    // Semi-transparent green (alpha=120)
         stateFrame.addDrawable(zDataset);
-        
         stateFrame.setAutoscaleX(true);
-        stateFrame.setAutoscaleY(true);
-        
+        stateFrame.setAutoscaleY(true);        
+
+        // horizontal reference line for 0.9056
+        referenceLine.setMarkerSize(-1);
+        referenceLine.append(0, 0.9056);
+        referenceLine.setConnected(true);
+        referenceLine.setLineColor(Color.RED);            
+
         // Position frames
         lorenzFrame.setLocation(50, 50);
         lyapunovFrame.setLocation(500, 50);
@@ -261,6 +261,16 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
                 control.print("t= " + decimal2.format(time) + "; ");
                 control.print("LE= " + decimal5.format(lyapunov) + "; ");
                 control.println();
+                
+                // Update reference line to current time range
+                // Dataset referenceLine = new Dataset();
+                // referenceLine.setMarkerSize(-1);
+                // referenceLine.append(0, 0.9056);
+                // referenceLine.append(time, 0.9056);
+                // referenceLine.setConnected(true);
+                // referenceLine.setLineColor(Color.RED);
+                referenceLine.append(time, 0.9056);
+                lyapunovSampleFrame.addDrawable(referenceLine);
             }
 
             // Add to state variables plot
