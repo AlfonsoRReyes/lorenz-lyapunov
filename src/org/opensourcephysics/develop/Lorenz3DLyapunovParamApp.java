@@ -43,8 +43,6 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
     Dataset yDataset = new Dataset();
     Dataset zDataset = new Dataset();
 
-    private double lastSampleTime = -100;
-    
     // Simulation parameters
     private double timeWindow = 100.0; // Time window for strip chart
     private double sampleInterval = 25.0; // Sampling interval for convergence plot
