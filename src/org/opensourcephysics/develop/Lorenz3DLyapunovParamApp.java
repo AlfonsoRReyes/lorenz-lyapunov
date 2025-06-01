@@ -89,6 +89,15 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         // we will need 1.1 when epsilon is very small
         lyapunovSampleFrame.setPreferredMinMaxY(0, 1.1);  // Y-min=0, Y-max=1
         
+        // // Add horizontal reference line at 0.9056
+        // Dataset referenceLine = new Dataset();
+        // referenceLine.setMarkerColor(Color.RED);
+        // referenceLine.setMarkerShape(Dataset.SQUARE);
+        // referenceLine.append(0, 0.9056);
+        // referenceLine.append(1000, 0.9056); // Make it extend far enough
+        // referenceLine.setConnected(false);
+        // lyapunovSampleFrame.addDrawable(referenceLine);
+        
         // Setup state variables strip chart - clean lines with better visibility
         xDataset.setConnected(true);
         xDataset.setMarkerSize(-1);  // Disable markers completely
