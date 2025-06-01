@@ -118,14 +118,15 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         referenceLine.setLineColor(Color.RED);            
 
         // Position frames
-        lorenzFrame.setLocation(50, 100);
-        lyapunovFrame.setLocation(400, 100);
-        lyapunovFrame.setSize(400, 300);
-        lyapunovLogFrame.setLocation(50, 475);  // Position log plot to the right
-        lyapunovLogFrame.setSize(400, 300);
+        lorenzFrame.setLocation(50, 100);     // 3D plot
+        stateFrame.setLocation( 50, 500);       // state variables
+        lyapunovLogFrame.setLocation(400, 100);  // Position log plot to the right
+        lyapunovFrame.setLocation(400, 500);    // cartesian LE
         lyapunovSampleFrame.setLocation(750, 100); // Position sampling plot to the far right
+
+        lyapunovLogFrame.setSize(400, 300);
         lyapunovSampleFrame.setSize(400, 300);
-        stateFrame.setLocation(400, 475);       // Move state variables below
+        lyapunovFrame.setSize(400, 300);
         stateFrame.setSize(400, 300);
     }
 
@@ -204,11 +205,13 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         control.setValue("beta2", 8.0/3.0);
         
         // Integration parameters
-        control.setValue("dt", 0.01);
-        control.setValue("sample interval", 25.0);
+        // control.setValue("dt", 0.01);
+        control.setAdjustableValue("dt", 0.01); // allows dt to be changed after initializaton
+        // control.setValue("sample interval", 25.0);
+        control.setAdjustableValue("sample interval", 25.0);
         enableStepsPerDisplay(true);
         setStepsPerDisplay(5);
-        control.setValue("debug", false);
+        control.setAdjustableValue("debug", false);
     }
 
     /**
