@@ -35,7 +35,8 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
     Dataset xDataset = new Dataset();
     Dataset yDataset = new Dataset();
     Dataset zDataset = new Dataset();
-    
+
+        
     // Simulation parameters
     private double timeWindow = 100.0; // Time window for strip chart
     
@@ -52,9 +53,11 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         lyapunovDataset.setConnected(true);
         lyapunovDataset.setLineColor(Color.RED);
         lyapunovDataset.setMarkerSize(-1);     // size of the LE curve
+        lyapunovDataset.setMaximumPoints(1000000);
         lyapunovFrame.addDrawable(lyapunovDataset);
         lyapunovFrame.setAutoscaleX(true);   // Enable autoscale for X
         lyapunovFrame.setAutoscaleY(true);   // Enable autoscale for Y
+        
         
         // Set Y-axis to start from 0, but keep Y-max autoscaling
         lyapunovFrame.setPreferredMinMaxY(0, Double.NaN);  // Y-min=0, Y-max=auto
@@ -72,6 +75,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         lyapunovLogDataset.setConnected(true);
         lyapunovLogDataset.setLineColor(Color.MAGENTA);
         lyapunovLogDataset.setMarkerSize(-1);
+        lyapunovLogDataset.setMaximumPoints(10000000);
         lyapunovLogFrame.addDrawable(lyapunovLogDataset);
         lyapunovLogFrame.setAutoscaleX(true);  // Enable autoscale for X
         lyapunovLogFrame.setAutoscaleY(true);  // Enable autoscale for Y
@@ -109,6 +113,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         lyapunovLogFrame.setSize(400, 300);
         stateFrame.setLocation(500, 400);       // Move state variables below
         stateFrame.setSize(400, 300);
+
     }
 
     /**
