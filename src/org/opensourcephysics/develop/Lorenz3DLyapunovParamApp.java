@@ -48,8 +48,8 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
     
     // Simulation parameters
     private double sampleInterval = 25.0; // Sampling interval for convergence plot
-    
-    
+    private boolean debug = true;
+
     /**
      * Constructs the Lorenz3DLyapunovParamApp application
      */
@@ -153,6 +153,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         
         double dt = control.getDouble("dt");
         sampleInterval = control.getDouble("sample interval");
+        debug = control.getBoolean("debug");
         
         // Initialize Lorenz system with separate parameters
         lorenz.initialize(x1, y1, z1, x2, y2, z2, 
@@ -207,6 +208,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         control.setValue("sample interval", 25.0);
         enableStepsPerDisplay(true);
         setStepsPerDisplay(5);
+        control.setValue("debug", false);
     }
 
     /**
@@ -239,7 +241,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         double z = state[2];
         
         // Debug output every 10 seconds to see timing
-        if (time % 10 < 0.1) {
+        if (time % 10 < 0.1 && debug) {
             System.out.printf("DEBUG: t=%.2f, time%%100=%.3f, condition=%b%n", 
                               time, time % 100, (time % 100 < 0.1));
         }
