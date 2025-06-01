@@ -25,19 +25,19 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
     Display3DFrame lorenzFrame = new Display3DFrame("Lorenz Attractor");
     LorenzLyapunovParam lorenz = new LorenzLyapunovParam();
     
-    // Strip chart for Lyapunov exponent evolution (linear scale)
+    // Lyapunov exponent evolution (linear scale)
     PlotFrame lyapunovFrame = new PlotFrame("Time", "Lyapunov Exponent", "Lyapunov Exponent Evolution");
     Dataset lyapunovDataset = new Dataset(Color.RED);
     
-    // Strip chart for Lyapunov exponent evolution (log scale)
+    // Lyapunov exponent evolution (log scale)
     PlotFrame lyapunovLogFrame = new PlotFrame("Time", "Log(Lyapunov Exponent)", "Lyapunov Exponent Evolution (Log Scale)");
     Dataset lyapunovLogDataset = new Dataset(Color.MAGENTA);
     
-    // Strip chart for 100-second Lyapunov sampling
+    // 100-second Lyapunov sampling plot
     PlotFrame lyapunovSampleFrame = new PlotFrame("Time", "Lyapunov Exponent", "Lyapunov Convergence (100s Sampling)");
     Dataset lyapunovSampleDataset = new Dataset(Color.BLUE);
     
-    // Strip chart for state variables evolution
+    // state variables evolution 3D plot
     PlotFrame stateFrame = new PlotFrame("Time", "State Variables x,y,z", "Lorenz State Variables vs Time");
     Dataset xDataset = new Dataset();
     Dataset yDataset = new Dataset();
@@ -46,9 +46,9 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
     // horizontal reference line
     Dataset referenceLine = new Dataset(); 
     
-
     // Simulation parameters
     private double sampleInterval = 25.0; // Sampling interval for convergence plot
+    
     
     /**
      * Constructs the Lorenz3DLyapunovParamApp application
@@ -261,16 +261,8 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
                 control.print("t= " + decimal2.format(time) + "; ");
                 control.print("LE= " + decimal5.format(lyapunov) + "; ");
                 control.println();
-                
-                // Update reference line to current time range
-                // Dataset referenceLine = new Dataset();
-                // referenceLine.setMarkerSize(-1);
-                // referenceLine.append(0, 0.9056);
-                // referenceLine.append(time, 0.9056);
-                // referenceLine.setConnected(true);
-                // referenceLine.setLineColor(Color.RED);
-                referenceLine.append(time, 0.9056);
-                lyapunovSampleFrame.addDrawable(referenceLine);
+                referenceLine.append(time, 0.9056);             
+                lyapunovSampleFrame.addDrawable(referenceLine);   // draw horizontal line
             }
 
             // Add to state variables plot
