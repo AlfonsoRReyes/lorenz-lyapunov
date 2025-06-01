@@ -11,12 +11,15 @@ import org.opensourcephysics.display3d.simple3d.*;
 import org.opensourcephysics.numerics.*;
 import org.opensourcephysics.display.*;
 import java.awt.*;
+import java.text.DecimalFormat;
 
 /**
  * Lorenz3DLyapunovParamApp demonstrates the calculation of Lyapunov exponent
  * for the Lorenz system using state variables or parameter perturbation
  */
 public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
+    DecimalFormat decimal2 = new DecimalFormat ("#0.00");
+    DecimalFormat decimal5 = new DecimalFormat ("#0.00000");
     
     // 3D Display for Lorenz attractor (x, y, z)
     Display3DFrame lorenzFrame = new Display3DFrame("Lorenz Attractor");
@@ -44,6 +47,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
     
     // Simulation parameters
     private double timeWindow = 100.0; // Time window for strip chart
+    private double sampleInterval = 25.0; // Sampling interval for convergence plot
     
     /**
      * Constructs the Lorenz3DLyapunovParamApp application
@@ -58,7 +62,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         lyapunovDataset.setConnected(true);
         lyapunovDataset.setLineColor(Color.RED);
         lyapunovDataset.setMarkerSize(-1);     // size of the LE curve
-        lyapunovDataset.setMaximumPoints(1000000);
+        lyapunovDataset.setMaximumPoints(1000000);   // 1e6 points
         lyapunovFrame.addDrawable(lyapunovDataset);
         lyapunovFrame.setAutoscaleX(true);   // Enable autoscale for X
         lyapunovFrame.setAutoscaleY(true);   // Enable autoscale for Y
@@ -69,7 +73,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         lyapunovLogDataset.setConnected(true);
         lyapunovLogDataset.setLineColor(Color.MAGENTA);
         lyapunovLogDataset.setMarkerSize(-1);
-        lyapunovLogDataset.setMaximumPoints(10000000);
+        lyapunovLogDataset.setMaximumPoints(1000000);   // 1e6 points
         lyapunovLogFrame.addDrawable(lyapunovLogDataset);
         lyapunovLogFrame.setAutoscaleX(true);  // Enable autoscale for X
         lyapunovLogFrame.setAutoscaleY(true);  // Enable autoscale for Y
@@ -85,7 +89,8 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         lyapunovSampleFrame.setAutoscaleX(true);
         lyapunovSampleFrame.setAutoscaleY(true);
         // lyapunovSampleFrame.setPreferredMinMaxY(0, Double.NaN);  // Y-min=0, Y-max=auto
-        lyapunovSampleFrame.setPreferredMinMaxY(0, 1);  // Y-min=0, Y-max=1
+        // we will need 1.1 when epsilon is very small
+        lyapunovSampleFrame.setPreferredMinMaxY(0, 1.1);  // Y-min=0, Y-max=1
         
         // Setup state variables strip chart - clean lines with better visibility
         xDataset.setConnected(true);
@@ -143,6 +148,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         
         double dt = control.getDouble("dt");
         timeWindow = control.getDouble("time window");
+        sampleInterval = control.getDouble("sample interval");
         
         // Initialize Lorenz system with separate parameters
         lorenz.initialize(x1, y1, z1, x2, y2, z2, 
@@ -196,7 +202,9 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         // Integration parameters
         control.setValue("dt", 0.01);
         control.setValue("time window", 200.0);
+        control.setValue("sample interval", 25.0);
         enableStepsPerDisplay(true);
+        setStepsPerDisplay(5);
     }
 
     /**
@@ -215,7 +223,7 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
         
         lyapunovFrame.setMessage("t=" + timeStr + ", λ=" + lyapunovStr);
         lyapunovLogFrame.setMessage("t=" + timeStr + ", λ=" + lyapunovStr);
-        lyapunovSampleFrame.setMessage("t=" + timeStr + ", λ=" + lyapunovStr + " (100s samples)");
+        lyapunovSampleFrame.setMessage("t=" + timeStr + ", λ=" + lyapunovStr + " (" + sampleInterval + "s samples)");
         lorenzFrame.setMessage("t=" + timeStr + ", λ=" + lyapunovStr);
         
         // Add point to Lyapunov strip chart with scrolling window
@@ -244,14 +252,13 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
                 lyapunovLogDataset.append(time, lyapunov);  // Raw value, not log-converted
             }
 
-            // Add to 100-second sampling plot
-            // if (Math.abs(time % 100) < 0.05) {  // Sample every 100 time units
-            // if (((int)(time + 0.01)) % 100 == 0) {  // Rounds to nearest integer
-            // if (((int)(time + 0.1)) % 100 == 0) {  // Rounds to nearest integer
-            // if (time - lastSampleTime >= 100.0) {  // Every 100 seconds
-            if (Math.abs(time % 25) < 0.05 || time < 1.0) {
+            // Add to sampling plot using configurable interval
+            if (Math.abs(time % sampleInterval) < 0.05 || time < 1.0) {
                 lyapunovSampleDataset.append(time, lyapunov);
-                System.out.printf("SAMPLE: t=%.1f LE=%.6f dataPoints=%d%n", time, lyapunov, lyapunovDataset.getIndex());
+                // System.out.printf("SAMPLE: t=%.1f LE=%.6f dataPoints=%d%n", time, lyapunov, lyapunovDataset.getIndex());
+                control.print("t= " + decimal2.format(time) + "; ");
+                control.print("LE= " + decimal5.format(lyapunov) + "; ");
+                control.println();
             }
 
             // Add to state variables plot
