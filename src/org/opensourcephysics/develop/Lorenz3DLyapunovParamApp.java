@@ -245,16 +245,6 @@ public class Lorenz3DLyapunovParamApp extends AbstractSimulation {
                 stateFrame.setPreferredMinMaxX(windowStart, windowEnd);
             }
             
-            // Remove auto-clearing feature - let data accumulate indefinitely
-            // if (lyapunovDataset.getIndex() > maxDataPoints) {
-            //     lyapunovDataset.clear();
-            //     lyapunovLogDataset.clear();
-            // }
-            // if (xDataset.getIndex() > maxDataPoints) {
-            //     xDataset.clear();
-            //     yDataset.clear();
-            //     zDataset.clear();
-            // }
         }
         
         lyapunovFrame.repaint();
